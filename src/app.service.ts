@@ -39,6 +39,9 @@ export class AppService {
 
   async getAddress(page: number, pageSize: number) {
     const result = await this.getAddressFromMemory();
-    return result.slice((page - 1) * pageSize, page * pageSize);
+    return {
+      data: result.slice((page - 1) * pageSize, page * pageSize),
+      total: Math.ceil(result.length / pageSize),
+    };
   }
 }
