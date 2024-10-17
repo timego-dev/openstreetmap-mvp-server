@@ -15,13 +15,17 @@ export class AppService {
     };
   }
 
-  async addAddress(data: IAddress) {
-    let newData: IAddress[] = [];
+  async getAddressFromMemory(): Promise<IAddress[]> {
+    let result: IAddress[] = [];
     const pureData = await this.cacheService.get(HISTORY_KEY);
     if (pureData) {
-      const convertedData = JSON.parse(pureData) || [];
-      newData = convertedData;
+      result = JSON.parse(pureData) || [];
     }
+    return _.orderBy(result, 'timestamp', 'desc');
+  }
+
+  async addAddress(data: IAddress) {
+    let newData: IAddress[] = await this.getAddressFromMemory();
     const isExist = newData.find(
       (item) => item.lat === data.lat && item.long === data.long,
     );
@@ -33,7 +37,8 @@ export class AppService {
     return data;
   }
 
-  async getAddress() {
-    return this.cacheService.get(HISTORY_KEY);
+  async getAddress(page: number, pageSize: number) {
+    const result = await this.getAddressFromMemory();
+    return result.slice((page - 1) * pageSize, page * pageSize);
   }
 }
