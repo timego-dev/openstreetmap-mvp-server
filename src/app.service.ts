@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { RedisCacheService } from './module/redis/redisCache.service';
 import { HISTORY_KEY } from './config';
 import { IAddress } from './@types/address';
@@ -14,6 +14,12 @@ export class AppService {
     if (pureData) {
       const convertedData = JSON.parse(pureData) || [];
       newData = convertedData;
+    }
+    const isExist = newData.find(
+      (item) => item.lat === data.lat && item.long === data.long,
+    );
+    if (isExist) {
+      throw new BadRequestException('Address already exists');
     }
     newData.push(data);
     await this.cacheService.set(HISTORY_KEY, JSON.stringify(newData));
