@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as redisStore from 'cache-manager-redis-store';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisCacheService } from './redisCache.service';
-
 @Module({
   imports: [
     CacheModule.registerAsync({
@@ -14,7 +13,7 @@ import { RedisCacheService } from './redisCache.service';
         store: redisStore,
         host: configService.get('REDIS_HOST'),
         port: configService.get('REDIS_PORT'),
-        ttl: configService.get('CACHE_TTL'),
+        ttl: 3600 * 24,
       }),
     }),
   ],
