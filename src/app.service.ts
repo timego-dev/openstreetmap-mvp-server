@@ -8,6 +8,13 @@ import * as _ from 'lodash';
 export class AppService {
   constructor(private readonly cacheService: RedisCacheService) {}
 
+  getHello() {
+    return {
+      status: 'Success',
+      message: 'OpenStreetMap MVP Backend Project Running Successfully~!',
+    };
+  }
+
   async addAddress(data: IAddress) {
     let newData: IAddress[] = [];
     const pureData = await this.cacheService.get(HISTORY_KEY);
